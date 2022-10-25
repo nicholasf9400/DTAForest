@@ -73,4 +73,4 @@ tab3 <-  table_base +
 
 tab3
 
-#### Tab3 applies unique() somehow
+#### Tab3 applies unique() somehowe
