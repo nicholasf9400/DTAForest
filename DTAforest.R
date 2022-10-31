@@ -13,6 +13,7 @@ d <- read_excel('Systolisk hjertesvigt.xlsx')
 require(ggplot2)
 require(epiR)
 require(stringr)
+require(gridExtra)
 
 #Compute sens and spec plus CI
 sesp_temp <- matrix(NA, ncol=6, nrow = nrow(d))
@@ -26,18 +27,19 @@ colnames(sesp_temp) <- c('sens', 'sensLL', 'sensUL',
 
 d <- cbind(d, sesp_temp)
 
+d$ind <- 1:nrow(d)
 
 forest.sens <- ggplot(data=d, aes(x=Reference, y=sens, ymin = sensLL, ymax = sensUL)) + theme_bw() + 
   theme(axis.title.y=element_blank(), axis.text.y = element_blank(), axis.ticks.y=element_blank(),
         axis.line = element_blank(), panel.border = element_blank(), panel.grid.minor = element_blank(), panel.grid.major = element_blank())+ 
-  geom_point(color='blue', shape = 'square', size=5) + geom_linerange() +
+  geom_point(color='blue', shape = 'square', size=3) + geom_linerange() +
   coord_flip() + ylab('Sensitivtet (95% KI)') + ylim(0,1)
 
 
 forest.spec <- ggplot(data=d, aes(x=Reference, y=spec, ymin = specLL, ymax = specUL)) + theme_bw() + 
   theme(axis.title.y=element_blank(), axis.text.y = element_blank(), axis.ticks.y=element_blank(),
         axis.line = element_blank(), panel.border = element_blank(), panel.grid.minor = element_blank(), panel.grid.major = element_blank())+ 
-  geom_point(color='blue', shape = 'square', size=5) + geom_linerange() +
+  geom_point(color='blue', shape = 'square', size=3) + geom_linerange() +
   coord_flip() + ylab('Specificitet (95% KI)') + ylim(0,1)
 
 
@@ -58,19 +60,42 @@ table_base <- ggplot(d, aes(y=Reference)) +
 
 tab1 <- table_base + 
   labs(title = "Reference") +
-  geom_text(aes(y = rev(Reference), x = 1, label = Reference)) + ## decimal places
+  geom_text(aes(y = ind, x = 1, label = Reference)) + ## decimal places
   ggtitle("Studie") + theme(plot.title=element_text(face = 'bold'))
 
+tab1
+
+TP <- table_base + 
+  labs(title = 'TP') + 
+  geom_text(aes(y = ind, x = 1, label = TP)) + 
+  ggtitle('TP') + theme(plot.title = element_text(face = 'bold'))
+
+FP <- table_base + 
+  labs(title = 'FP') + 
+  geom_text(aes(y = ind, x = 1, label = FP)) + 
+  ggtitle('FP') + theme(plot.title = element_text(face = 'bold'))
+
+FN <- table_base + 
+  labs(title = 'FN') + 
+  geom_text(aes(y = ind, x = 1, label = FN)) + 
+  ggtitle('FN') + theme(plot.title = element_text(face = 'bold'))
+
+TN <- table_base + 
+  labs(title = 'TN') + 
+  geom_text(aes(y = ind, x = 1, label = TN)) + 
+  ggtitle('TN') + theme(plot.title = element_text(face = 'bold'))
+
 tab2 <-  table_base +
-  geom_text(aes(y = Tærskel, x = 1, label = Tærskel)) + ## decimal places
+  geom_text(data = d, aes(y = ind, x = 1, label = Tærskel), size = 3.5,
+            position = 'identity') + ## decimal places
   ggtitle("Tærskel for positivt fund") + theme(plot.title=element_text(face = 'bold'))
 
-tab2
 
 tab3 <-  table_base +
-  geom_text(aes(y = `Type HHUSD`, x = 1, label = `Type HHUSD`)) + ## decimal places
+  geom_text(aes(y = ind, x = 1, label = `Type HHUSD`)) + ## decimal places
   ggtitle("Type HHUSD") + theme(plot.title=element_text(face = 'bold'))
 
-tab3
 
-#### Tab3 applies unique() somehowe
+grid.arrange(tab1, tab2, tab3, forest.sens, forest.spec, nrow=1, ncol=5)
+
+
