@@ -29,6 +29,10 @@ d <- cbind(d, sesp_temp)
 
 d$ind <- 1:nrow(d)
 
+d$sensitivitet <- paste0(round(d$sens, 3), " [", round(d$sensLL,3), ", ", round(d$sensUL, 3), "]")
+
+d$specificitet <- paste0(round(d$spec, 3), " [", round(d$specLL,3), ", ", round(d$specUL, 3), "]")
+
 forest.sens <- ggplot(data=d, aes(x=Reference, y=sens, ymin = sensLL, ymax = sensUL)) + theme_bw() + 
   theme(axis.title.y=element_blank(), axis.text.y = element_blank(), axis.ticks.y=element_blank(),
         axis.line = element_blank(), panel.border = element_blank(), panel.grid.minor = element_blank(), panel.grid.major = element_blank())+ 
@@ -58,17 +62,16 @@ table_base <- ggplot(d, aes(y=Reference)) +
         panel.grid.minor = element_blank(), 
         plot.background = element_blank())
 
-tab1 <- table_base + 
+ref <- table_base + 
   labs(title = "Reference") +
   geom_text(aes(y = ind, x = 1, label = Reference)) + ## decimal places
   ggtitle("Studie") + theme(plot.title=element_text(face = 'bold'))
 
-tab1
 
-TP <- table_base + 
-  labs(title = 'TP') + 
+SP <- table_base + 
+  labs(title = 'SP') + 
   geom_text(aes(y = ind, x = 1, label = TP)) + 
-  ggtitle('TP') + theme(plot.title = element_text(face = 'bold'))
+  ggtitle('SP') + theme(plot.title = element_text(face = 'bold'))
 
 FP <- table_base + 
   labs(title = 'FP') + 
@@ -80,10 +83,21 @@ FN <- table_base +
   geom_text(aes(y = ind, x = 1, label = FN)) + 
   ggtitle('FN') + theme(plot.title = element_text(face = 'bold'))
 
-TN <- table_base + 
-  labs(title = 'TN') + 
+SN <- table_base + 
+  labs(title = 'SN') + 
   geom_text(aes(y = ind, x = 1, label = TN)) + 
-  ggtitle('TN') + theme(plot.title = element_text(face = 'bold'))
+  ggtitle('SN') + theme(plot.title = element_text(face = 'bold'))
+
+sensitivitet <- table_base + 
+  labs(title = 'Sensitivitet') + 
+  geom_text(aes(y = ind, x=1, label = sensitivitet)) + 
+  ggtitle('Sensitivitet (95% KI)') + theme(plot.title = element_text(face = 'bold'))
+
+specificitet <- table_base + 
+  labs(title = 'Specificitet') + 
+  geom_text(aes(y = ind, x=1, label = specificitet)) + 
+  ggtitle('Specificitet (95% KI)') + theme(plot.title = element_text(face = 'bold'))
+
 
 tab2 <-  table_base +
   geom_text(data = d, aes(y = ind, x = 1, label = Tærskel), size = 3.5,
@@ -96,6 +110,6 @@ tab3 <-  table_base +
   ggtitle("Type HHUSD") + theme(plot.title=element_text(face = 'bold'))
 
 
-grid.arrange(tab1, tab2, tab3, forest.sens, forest.spec, nrow=1, ncol=5)
+grid.arrange(ref, SP, FP, FN, SN, tab2, tab3, sensitivitet, specificitet, forest.sens, forest.spec, nrow=1, ncol = 11)
 
 
