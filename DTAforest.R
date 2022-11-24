@@ -45,7 +45,7 @@ forest.spec <- ggplot(data=d, aes(x=Reference, y=spec, ymin = specLL, ymax = spe
 
 table_base <- ggplot(d, aes(y=Reference)) +
   ylab(NULL) + xlab("  ") + 
-  theme(plot.title = element_text(hjust = 0.5, size=12), 
+  theme(plot.title = element_text(size=12, hjust=0), 
         axis.text.x = element_text(color="white", hjust = -3, size = 25), ## This is used to help with alignment
         axis.line = element_blank(),
         axis.text.y = element_blank(), 
@@ -60,39 +60,42 @@ table_base <- ggplot(d, aes(y=Reference)) +
 
 tab1 <- table_base + 
   labs(title = "Reference") +
-  geom_text(aes(y = ind, x = 1, label = Reference)) + ## decimal places
-  ggtitle("Studie") + theme(plot.title=element_text(face = 'bold'))
+  geom_text(aes(y = ind, x = 0, label = Reference, hjust=0)) + ## decimal places
+  ggtitle(aes("Studie")) + theme(plot.title=element_text(face = 'bold'))
 
 tab1
 
+
 TP <- table_base + 
   labs(title = 'TP') + 
-  geom_text(aes(y = ind, x = 1, label = TP)) + 
+  geom_text(aes(y = ind, x = 0, label = TP, hjust=0)) + 
   ggtitle('TP') + theme(plot.title = element_text(face = 'bold'))
+
+TP
 
 FP <- table_base + 
   labs(title = 'FP') + 
-  geom_text(aes(y = ind, x = 1, label = FP)) + 
+  geom_text(aes(y = ind, x = 1, label = FP, hjust=0)) + 
   ggtitle('FP') + theme(plot.title = element_text(face = 'bold'))
 
 FN <- table_base + 
   labs(title = 'FN') + 
-  geom_text(aes(y = ind, x = 1, label = FN)) + 
+  geom_text(aes(y = ind, x = 1, label = FN, hjust=0)) + 
   ggtitle('FN') + theme(plot.title = element_text(face = 'bold'))
 
 TN <- table_base + 
   labs(title = 'TN') + 
-  geom_text(aes(y = ind, x = 1, label = TN)) + 
+  geom_text(aes(y = ind, x = 1, label = TN, hjust=0)) + 
   ggtitle('TN') + theme(plot.title = element_text(face = 'bold'))
 
 tab2 <-  table_base +
-  geom_text(data = d, aes(y = ind, x = 1, label = Tærskel), size = 3.5,
+  geom_text(data = d, aes(y = ind, x = 1, label = Tærskel, hjust=0), size = 3.5,
             position = 'identity') + ## decimal places
   ggtitle("Tærskel for positivt fund") + theme(plot.title=element_text(face = 'bold'))
 
 
 tab3 <-  table_base +
-  geom_text(aes(y = ind, x = 1, label = `Type HHUSD`)) + ## decimal places
+  geom_text(aes(y = ind, x = 1, label = `Type HHUSD`, hjust=0)) + ## decimal places
   ggtitle("Type HHUSD") + theme(plot.title=element_text(face = 'bold'))
 
 
