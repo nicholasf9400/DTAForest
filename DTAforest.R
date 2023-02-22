@@ -45,8 +45,8 @@ forest.spec <- ggplot(data=d, aes(x=Reference, y=spec, ymin = specLL, ymax = spe
 
 table_base <- ggplot(d, aes(y=Reference)) +
   ylab(NULL) + xlab("  ") + 
-  theme(plot.title = element_text(size=12, hjust=0), 
-        axis.text.x = element_text(color="white", hjust = -3, size = 25), ## This is used to help with alignment
+  theme(plot.title = element_text(size=12), 
+        axis.text.x = element_text(color="white", hjust = 0, size = 25), ## This is used to help with alignment
         axis.line = element_blank(),
         axis.text.y = element_blank(), 
         axis.ticks = element_blank(),
@@ -58,10 +58,10 @@ table_base <- ggplot(d, aes(y=Reference)) +
         panel.grid.minor = element_blank(), 
         plot.background = element_blank())
 
-tab1 <- table_base + 
+tab1 <- ggplot(d) + 
   labs(title = "Reference") +
-  geom_text(aes(y = ind, x = 0, label = Reference, hjust=0)) + ## decimal places
-  ggtitle(aes("Studie")) + theme(plot.title=element_text(face = 'bold'))
+  geom_text(aes(y = rev(ind), x = 0, label = Reference, hjust=0)) + ## decimal places
+  ggtitle(aes("Studie")) + theme(plot.title=element_text(face = 'bold')) + xlim(0,0.1)
 
 tab1
 
